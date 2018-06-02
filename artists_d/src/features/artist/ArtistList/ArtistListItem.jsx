@@ -4,7 +4,7 @@ import ArtistListDiscography from './ArtistListDiscography';
 
 class ArtistListItem extends Component {
     render() {
-        const { artist } = this.props;
+        const { artist, onArtistOpen, deleteArtist } = this.props;
         return (
             <Segment.Group>
                 <Segment>
@@ -45,10 +45,18 @@ class ArtistListItem extends Component {
                 <Segment clearing>
                     <span>{artist.history}</span>
                     <Button
+                        onClick={onArtistOpen(artist)}
                         as="a"
                         color="teal"
                         floated="right"
                         content="View"
+                    />
+                    <Button
+                        onClick={deleteArtist(artist.id)}
+                        as="a"
+                        color="red"
+                        floated="right"
+                        content="Delete"
                     />
                 </Segment>
             </Segment.Group>

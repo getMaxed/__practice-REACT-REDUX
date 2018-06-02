@@ -1,20 +1,49 @@
 import React, { Component } from 'react';
 import { Segment, Form, Button } from 'semantic-ui-react';
 
+const emptyArtist = {
+    name: '',
+    country: '',
+    label: '',
+    bestAlbum: '',
+    history: ''
+};
+
 class ArtistForm extends Component {
     state = {
         artist: {
-            name: '',
-            country: '',
-            label: '',
-            bestAlbum: '',
-            history: ''
+            artist: emptyArtist
         }
     };
 
+    componentDidMount() {
+        if (this.props.selectedArtist !== null) {
+            this.setState({
+                artist: this.props.selectedArtist
+            });
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.selectedArtist !== this.props.selectedArtist) {
+            this.setState({
+                artist: nextProps.selectedArtist || emptyArtist
+            });
+        }
+    }
+
     onFormSubmit = e => {
         e.preventDefault();
-        this.props.addArtist(this.state.artist);
+        /*
+        |--------------------------------------------------------------------------
+        | only existing artists have ids
+        |--------------------------------------------------------------------------
+        */
+        if (this.state.artist.id) {
+            this.props.updateArtist(this.state.artist);
+        } else {
+            this.props.addArtist(this.state.artist);
+        }
     };
 
     onInputChange = e => {

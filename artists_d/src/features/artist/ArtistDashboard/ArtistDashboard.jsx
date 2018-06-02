@@ -95,11 +95,13 @@ const artistsInfo = [
 class ArtistDashboard extends Component {
     state = {
         artists: artistsInfo,
-        isOpen: false
+        isOpen: false,
+        selectedArtist: null
     };
 
     handleFormOpen = () => {
         this.setState({
+            selectedArtist: null,
             isOpen: true
         });
     };
@@ -107,6 +109,27 @@ class ArtistDashboard extends Component {
     handleCancel = () => {
         this.setState({
             isOpen: false
+        });
+    };
+
+    handleUpdateArtist = updatedArtist => {
+        this.setState({
+            artists: this.state.artists.map(artist => {
+                if (artist.id === updatedArtist.id) {
+                    return Object.assign({}, updatedArtist);
+                } else {
+                    return artist;
+                }
+            }),
+            isOpen: false,
+            selectedArtist: null
+        });
+    };
+
+    handleOpenArtist = artistToOpen => () => {
+        this.setState({
+            selectedArtist: artistToOpen,
+            isOpen: true
         });
     };
 
@@ -119,11 +142,25 @@ class ArtistDashboard extends Component {
         });
     };
 
+    handleDeleteArtist = artistId => () => {
+        const updatedArtists = this.state.artists.filter(
+            artist => artist.id !== artistId
+        );
+        this.setState({
+            artists: updatedArtists
+        });
+    };
+
     render() {
+        const { selectedArtist } = this.state;
         return (
             <Grid>
                 <Grid.Column width={12}>
-                    <ArtistList artists={this.state.artists} />
+                    <ArtistList
+                        deleteArtist={this.handleDeleteArtist}
+                        onArtistOpen={this.handleOpenArtist}
+                        artists={this.state.artists}
+                    />
                 </Grid.Column>
                 <Grid.Column width={4}>
                     <Button
@@ -133,8 +170,10 @@ class ArtistDashboard extends Component {
                     />
                     {this.state.isOpen && (
                         <ArtistForm
+                            selectedArtist={selectedArtist}
                             addArtist={this.handleAddArtist}
                             handleCancel={this.handleCancel}
+                            updateArtist={this.handleUpdateArtist}
                         />
                     )}
                 </Grid.Column>
