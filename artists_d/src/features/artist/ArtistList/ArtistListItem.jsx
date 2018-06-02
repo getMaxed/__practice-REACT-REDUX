@@ -33,12 +33,13 @@ class ArtistListItem extends Component {
                 </Segment>
                 <Segment secondary>
                     <List>
-                        {artist.albums.map(album => (
-                            <ArtistListDiscography
-                                key={album.id}
-                                album={album}
-                            />
-                        ))}
+                        {artist.albums &&
+                            artist.albums.map(album => (
+                                <ArtistListDiscography
+                                    key={album.id}
+                                    album={album}
+                                />
+                            ))}
                     </List>
                 </Segment>
                 <Segment clearing>

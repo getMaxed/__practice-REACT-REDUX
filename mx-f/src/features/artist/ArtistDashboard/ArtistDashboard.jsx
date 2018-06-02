@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Grid, Button } from 'semantic-ui-react';
 import ArtistList from '../ArtistList/ArtistList';
 import ArtistForm from '../ArtistForm/ArtistForm';
-import cuid from 'cuid';
 
 const artistsInfo = [
     {
@@ -10,7 +9,7 @@ const artistsInfo = [
         name: 'Soilwork',
         formed: 1995,
         country: 'Sweden',
-        label: 'asdf',
+        label: 'Roadrunner',
         history: 'asdf asdf asdf',
         active: true,
         artistPhotoURL: 'images/soilwork.jpg',
@@ -26,7 +25,7 @@ const artistsInfo = [
                 id: 2,
                 name: 'The Ride Majestic',
                 year: 2015,
-                label: 'Nuclear Blast',
+                label: 'Roadrunner',
                 description: 'fdf dfsasdf asdf asdf'
             },
             {
@@ -43,7 +42,7 @@ const artistsInfo = [
         name: 'Deicide',
         formed: 1988,
         country: 'USA',
-        label: 'Nuclear Blast',
+        label: 'Earache',
         history: 'fdsfsd aasdf sa',
         active: true,
         artistPhotoURL: 'images/deicide.jpg',
@@ -82,7 +81,7 @@ const artistsInfo = [
                 description: 'asdf asdf asdf'
             },
             {
-                id: 2,
+                id: 1,
                 name: 'Hammer Of Wolves',
                 year: 2004,
                 label: 'Roadrunner',
@@ -93,31 +92,28 @@ const artistsInfo = [
 ];
 
 class ArtistDashboard extends Component {
-    state = {
-        artists: artistsInfo,
-        isOpen: false
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            artists: artistsInfo,
+            isOpen: false
+        };
 
-    handleFormOpen = () => {
+        this.handleFormOpen = this.handleFormOpen.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
+    }
+
+    handleFormOpen() {
         this.setState({
             isOpen: true
         });
-    };
+    }
 
-    handleCancel = () => {
+    handleCancel() {
         this.setState({
             isOpen: false
         });
-    };
-
-    handleAddArtist = newArtist => {
-        newArtist.id = cuid();
-        const updatedArtists = [...this.state.artists, newArtist];
-        this.setState({
-            artists: updatedArtists,
-            isOpen: false
-        });
-    };
+    }
 
     render() {
         return (
@@ -132,10 +128,7 @@ class ArtistDashboard extends Component {
                         content="Add Artist"
                     />
                     {this.state.isOpen && (
-                        <ArtistForm
-                            addArtist={this.handleAddArtist}
-                            handleCancel={this.handleCancel}
-                        />
+                        <ArtistForm handleCancel={this.handleCancel} />
                     )}
                 </Grid.Column>
             </Grid>
