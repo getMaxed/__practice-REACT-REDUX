@@ -8,20 +8,25 @@ body {
     text-align: justify !important;
 }
 
-.card-title,
 h4 {
     font-weight: bold;
 }
 
 .share {
     padding: 15px;
+    margin: 12px;
 }
 
 .timeline {
     padding: 15px;
     border: 1px solid #e0e0e0;
+    margin-top: 15px;
 }
 
 .app {
     padding: 25px;
+}
+
+.card-body p {
+    font-weight: bold;
 }

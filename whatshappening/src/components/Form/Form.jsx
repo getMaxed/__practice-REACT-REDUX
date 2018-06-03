@@ -2,19 +2,29 @@ import React, { Component } from 'react';
 
 class Form extends Component {
     state = {
-        share: ''
+        share: {
+            body: ''
+        }
     };
 
     handleInputChange = e => {
+        const newShare = Object.assign({}, this.state.share);
+        newShare[e.target.name] = e.target.value;
         this.setState({
-            share: e.target.value
+            share: newShare
         });
     };
 
     handleSubmit = e => {
         e.preventDefault();
         this.props.addShare(this.state.share);
-        this.state.share = '';
+        const emptyShare = Object.assign({}, this.state.share, {
+            body: '',
+            id: '',
+            time: ''
+        });
+
+        this.setState({ share: emptyShare });
     };
 
     render() {
@@ -27,8 +37,9 @@ class Form extends Component {
                     <div className="form-group">
                         <textarea
                             rows="5"
+                            name="body"
                             className="form-control"
-                            value={this.state.share}
+                            value={this.state.share.body}
                             onChange={this.handleInputChange}
                         />
                     </div>
