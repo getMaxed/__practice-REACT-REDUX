@@ -19,3 +19,24 @@ artists_d/.env.production.local
 artists_d/npm-debug.log*
 artists_d/yarn-debug.log*
 artists_d/yarn-error.log*
+
+
+# dependencies
+whatshappening/node_modules
+
+# testing
+whatshappening/coverage
+
+# production
+whatshappening/build
+
+# misc
+whatshappening/.DS_Store
+whatshappening/.env.local
+whatshappening/.env.development.local
+whatshappening/.env.test.local
+whatshappening/.env.production.local
+
+whatshappening/npm-debug.log*
+whatshappening/yarn-debug.log*
+whatshappening/yarn-error.log*

@@ -1,0 +1,27 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Raleway', sans-serif !important;
+}
+
+.card-text {
+    text-align: justify !important;
+}
+
+.card-title,
+h4 {
+    font-weight: bold;
+}
+
+.share {
+    padding: 15px;
+}
+
+.timeline {
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+}
+
+.app {
+    padding: 25px;
+}
