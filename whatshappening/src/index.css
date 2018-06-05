@@ -1,3 +1,9 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -43,4 +49,53 @@ i:hover {
     color: rgb(200, 35, 51);
 }
 
-/* bootstrap's red color : rgb(200, 35, 51) */
+.upperHeader {
+    height: 40px;
+    /* border: 1px solid #e0e0e0; */
+    padding: 8px;
+    margin-bottom: 8px;
+}
+
+.upperHeader_left {
+    max-width: 60%;
+    float: left !important;
+}
+.upperHeader_right {
+    max-width: 30%;
+    float: right !important;
+    font-weight: bold;
+}
+
+.sharesCount {
+    font-weight: normal;
+}
+
+.animate {
+    backface-visibility: hidden;
+    animation-name: fadeIn;
+    animation-duration: 0.7s;
+}
+
+.unAnimate {
+    backface-visibility: hidden;
+    animation-name: fadeOut;
+    animation-duration: 0.7s;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}

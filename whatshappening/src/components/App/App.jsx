@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import cuid from 'cuid';
 import Timeline from '../Timeline/Timeline';
 import Share from '../Share/Share';
+import Header from '../Header/Header';
 
 const resetInput = {
     id: '',
@@ -21,6 +22,7 @@ class App extends Component {
 
         this.state = {
             isEditing: false,
+            status: null,
             shares: [],
             formInput: {
                 id: '',
@@ -62,7 +64,8 @@ class App extends Component {
             newState.shares = sortedShares;
             this.setState({
                 shares: sortedShares,
-                formInput: resetInput
+                formInput: resetInput,
+                status: 'shareCreated'
             });
         } else {
             e.preventDefault();
@@ -74,7 +77,9 @@ class App extends Component {
             newState.shares[index].body = newState.formInput.body;
             this.setState({
                 isEditing: false,
-                shares: newState.shares
+                shares: newState.shares,
+                formInput: resetInput,
+                status: 'shareUpdated'
             });
         }
     };
@@ -109,7 +114,8 @@ class App extends Component {
         );
         this.setState({
             shares: updatedShares,
-            isEditing: false
+            isEditing: false,
+            status: 'shareDeleted'
         });
     };
 
@@ -144,9 +150,23 @@ class App extends Component {
                     <div className="col-sm-10 offset-sm-1">
                         <div className="app">
                             <form onSubmit={this.handleFormSubmit}>
-                                <h4 className="h4 text-center">
-                                    Hey Max, what's happening?
-                                </h4>
+                                {this.state.shares.length !== 0 && (
+                                    <Header
+                                        shares={this.state.shares}
+                                        status={this.state.status}
+                                    />
+                                )}
+
+                                {this.state.isEditing === false ? (
+                                    <h4 className="h4 text-center">
+                                        Share what's happening
+                                    </h4>
+                                ) : (
+                                    <h4 className="h4 text-center">
+                                        Please edit the text
+                                    </h4>
+                                )}
+
                                 <div className="form-group">
                                     <textarea
                                         ref={this.textareaRef}
@@ -157,6 +177,7 @@ class App extends Component {
                                         onChange={this.handleInputChange}
                                     />
                                 </div>
+
                                 {buttons}
                             </form>
                             {this.state.shares.body !== '' &&
