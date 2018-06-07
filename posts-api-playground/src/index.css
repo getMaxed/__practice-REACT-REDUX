@@ -1,5 +1,6 @@
 * {
     box-sizing: border-box;
+    list-style: none;
 }
 
 body {
@@ -40,4 +41,38 @@ body {
 
 .right {
     float: right;
+}
+
+.footer {
+    width: 90%;
+    border: 1px solid black;
+    margin: 20px auto;
+    padding: 15px;
+    /* text-align: center; */
+    /* max-height: 75px; */
+}
+
+.submitNumber {
+    display: inline-block;
+    float: right;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.author {
+    color: brown;
+}
+
+.author:hover {
+    cursor: pointer;
+}
+
+li {
+    text-align: left;
+}
+
+.back {
+    float: left;
 }
