@@ -40,3 +40,25 @@ whatshappening/.env.production.local
 whatshappening/npm-debug.log*
 whatshappening/yarn-debug.log*
 whatshappening/yarn-error.log*
+
+
+
+# dependencies
+posts-api-playground/node_modules
+
+# testing
+posts-api-playground/coverage
+
+# production
+posts-api-playground/build
+
+# misc
+posts-api-playground/.DS_Store
+posts-api-playground/.env.local
+posts-api-playground/.env.development.local
+posts-api-playground/.env.test.local
+posts-api-playground/.env.production.local
+
+posts-api-playground/npm-debug.log*
+posts-api-playground/yarn-debug.log*
+posts-api-playground/yarn-error.log*
