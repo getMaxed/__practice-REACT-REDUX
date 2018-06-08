@@ -41,6 +41,8 @@ body {
 
 .right {
     float: right;
+    max-height: 20px;
+    overflow: hidden;
 }
 
 .footer {
@@ -75,4 +77,12 @@ li {
 
 .back {
     float: left;
+}
+
+.error {
+    color: red;
+}
+
+.errorDiv {
+    display: inline-block;
 }

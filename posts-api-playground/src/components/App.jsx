@@ -1,16 +1,28 @@
 import React, { Component } from 'react';
+import Header from './Header';
+import Main from './Main';
+import FooterForm from './FooterForm';
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            posts: [],
-            numberEntered: null,
-            showingPost: null,
-            showingUser: null,
-            postView: true
-        };
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | STATE
+    |--------------------------------------------------------------------------
+    */
+
+    state = {
+        posts: [],
+        showingPost: null,
+        showingUser: null,
+        postView: true,
+        error: false
+    };
+
+    /*
+    |--------------------------------------------------------------------------
+    | LIFECYCLE, INITIAL API CALL
+    |--------------------------------------------------------------------------
+    */
 
     componentDidMount() {
         const postsURL = 'https://jsonplaceholder.typicode.com/posts';
@@ -35,10 +47,36 @@ class App extends Component {
             });
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | CALLBACKS
+    |--------------------------------------------------------------------------
+    */
+
     handleNumberEntered = number => {
-        this.setState({
-            numberEntered: number
-        });
+        if (number < 1 || number > 100) {
+            return this.setState({
+                error: true
+            });
+        }
+
+        const postSelected = this.state.posts.find(
+            post => post.id === parseInt(number)
+        );
+        const postAuthorURL = `https://jsonplaceholder.typicode.com/users/${
+            postSelected.userId
+        }`;
+
+        fetch(postAuthorURL)
+            .then(res => res.json())
+            .then(user => {
+                this.setState({
+                    showingUser: user,
+                    showingPost: postSelected,
+                    postView: true,
+                    error: false
+                });
+            });
     };
 
     handleOpenUserView = () => {
@@ -47,11 +85,17 @@ class App extends Component {
         });
     };
 
-    handleGoBack = () => {
+    handleCloseUserView = () => {
         this.setState({
             postView: true
         });
     };
+
+    /*
+    |--------------------------------------------------------------------------
+    | RENDER
+    |--------------------------------------------------------------------------
+    */
 
     render() {
         return (
@@ -67,189 +111,17 @@ class App extends Component {
                             post={this.state.showingPost}
                             user={this.state.showingUser}
                             postView={this.state.postView}
-                            goBack={this.handleGoBack}
+                            closeUserView={this.handleCloseUserView}
                         />
-                        <Footer numberEntered={this.handleNumberEntered} />
+                        <FooterForm
+                            numberEntered={this.handleNumberEntered}
+                            error={this.state.error}
+                        />
                     </div>
                 )}
             </div>
         );
     }
 }
-
-/*
-|--------------------------------------------------------------------------
-| Header Component
-|--------------------------------------------------------------------------
-*/
-
-const Header = props => {
-    return (
-        <div className="header">
-            <PostNumber postNumber={props.post.id} />
-            <PostAuthor
-                postAuthor={props.user}
-                openUserView={props.openUserView}
-            />
-        </div>
-    );
-};
-
-/*
-|--------------------------------------------------------------------------
-| PostNumber Component
-|--------------------------------------------------------------------------
-*/
-
-const PostNumber = props => {
-    return (
-        <div>
-            <h4 className="left">Post number : {props.postNumber}</h4>
-        </div>
-    );
-};
-
-/*
-|--------------------------------------------------------------------------
-| PostAuthor Component
-|--------------------------------------------------------------------------
-*/
-
-const PostAuthor = props => {
-    let name = props.postAuthor.name.slice();
-
-    if (name.length > 21) {
-        const nameArr = name.split(' ');
-        const firstName = nameArr[0].charAt(0).concat('.');
-        const lastName = nameArr.slice(1);
-        return (name = firstName + ' ' + lastName);
-        console.log(name);
-    }
-
-    return (
-        <div>
-            <h4 className="right">
-                Author:&nbsp;
-                <span onClick={props.openUserView} className="author">
-                    {name}
-                </span>
-            </h4>
-        </div>
-    );
-};
-
-/*
-|--------------------------------------------------------------------------
-| Main Component
-|--------------------------------------------------------------------------
-*/
-
-const Main = props => {
-    const title = props.postView ? props.post.title : props.user.name;
-    const body = props.postView ? props.post.body : props.user;
-
-    return (
-        <div className="Main">
-            <MainTitle title={title} />
-            <MainBody
-                body={body}
-                postView={props.postView}
-                goBack={props.goBack}
-            />
-        </div>
-    );
-};
-
-/*
-|--------------------------------------------------------------------------
-| MainTitle Component
-|--------------------------------------------------------------------------
-*/
-
-const MainTitle = props => {
-    return <h2>{props.title}</h2>;
-};
-
-/*
-|--------------------------------------------------------------------------
-| MainBody Component
-|--------------------------------------------------------------------------
-*/
-
-const MainBody = props => {
-    return (
-        <div>
-            {props.postView ? (
-                <p>{props.body}</p>
-            ) : (
-                <div>
-                    <ul>
-                        <li>Name: {props.body.name}</li>
-                        <li>Phone: {props.body.phone}</li>
-                        <li>Username: {props.body.username}</li>
-                        <li>Website: {props.body.website}</li>
-                    </ul>
-                    <br />
-                    <button onClick={props.goBack} className="back">
-                        Back to post
-                    </button>
-                </div>
-            )}
-        </div>
-    );
-};
-
-/*
-|--------------------------------------------------------------------------
-| Footer Component
-|--------------------------------------------------------------------------
-*/
-
-class Footer extends Component {
-    state = {
-        formInput: ''
-    };
-
-    handleChange = e => {
-        this.setState({
-            formInput: e.target.value
-        });
-    };
-
-    handleSubmit = e => {
-        e.preventDefault();
-        const number = this.state.formInput;
-        this.props.numberEntered(number);
-    };
-
-    render() {
-        return (
-            <div className="footer">
-                <form>
-                    <label htmlFor="">Enter a number from 1 to 100 :</label>
-                    &nbsp;&nbsp;
-                    <div className="submitNumber">
-                        <input
-                            type="number"
-                            min="0"
-                            max="100"
-                            value={this.state.formInput}
-                            onChange={this.handleChange}
-                        />&nbsp;&nbsp;
-                        <button type="submit" onClick={this.handleSubmit}>
-                            Submit
-                        </button>
-                    </div>
-                </form>
-            </div>
-        );
-    }
-}
-
-/*
-|--------------------------------------------------------------------------
-| END
-|--------------------------------------------------------------------------
-*/
 
 export default App;
