@@ -8,8 +8,19 @@ class FooterForm extends Component {
     */
 
     state = {
-        formInput: ''
+        formInput: '',
+        error: false
     };
+
+    /*
+    |--------------------------------------------------------------------------
+    | LIFECYCLE
+    |--------------------------------------------------------------------------
+    */
+
+    shouldComponentUpdate(nextProps) {
+        return this.state.formInput !== nextProps.showingPostId;
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -17,16 +28,31 @@ class FooterForm extends Component {
     |--------------------------------------------------------------------------
     */
 
-    handleOnInputChange = e => {
+    handleInputChange = e => {
         this.setState({
-            formInput: e.target.value
+            formInput: parseInt(e.target.value)
         });
     };
 
-    handleOnFormSubmit = e => {
+    handleFormSubmit = e => {
         e.preventDefault();
         const number = this.state.formInput;
-        this.props.numberEntered(number);
+        if (number < 1 || number > 100) {
+            this.setState(() => {
+                return {
+                    error: true,
+                    formInput: ''
+                };
+            });
+        } else {
+            this.props.numberEntered(number);
+            this.setState(() => {
+                return {
+                    error: false,
+                    formInput: ''
+                };
+            });
+        }
     };
 
     /*
@@ -40,7 +66,7 @@ class FooterForm extends Component {
             <div className="footer">
                 <form>
                     <div className="errorDiv">
-                        {this.props.error ? (
+                        {this.state.error ? (
                             <label className="error" htmlFor="">
                                 Enter a number from 1 to 100 :
                             </label>
@@ -57,9 +83,9 @@ class FooterForm extends Component {
                             min="0"
                             max="100"
                             value={this.state.formInput}
-                            onChange={this.handleOnInputChange}
+                            onChange={this.handleInputChange}
                         />&nbsp;&nbsp;
-                        <button type="submit" onClick={this.handleOnFormSubmit}>
+                        <button type="submit" onClick={this.handleFormSubmit}>
                             Submit
                         </button>
                     </div>

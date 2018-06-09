@@ -14,8 +14,7 @@ class App extends Component {
         posts: [],
         showingPost: null,
         showingUser: null,
-        postView: true,
-        error: false
+        postView: true
     };
 
     /*
@@ -37,10 +36,12 @@ class App extends Component {
                     }`
                 ).then(res => {
                     res.json().then(user => {
-                        this.setState({
-                            posts: posts,
-                            showingPost: randomPost,
-                            showingUser: user
+                        this.setState(() => {
+                            return {
+                                posts: posts,
+                                showingPost: randomPost,
+                                showingUser: user
+                            };
                         });
                     });
                 });
@@ -54,15 +55,14 @@ class App extends Component {
     */
 
     handleNumberEntered = number => {
-        if (number < 1 || number > 100) {
-            return this.setState({
-                error: true
-            });
-        }
+        const postSelected = this.state.posts.find(post => post.id === number);
+        this.setState(() => {
+            return {
+                showingPost: postSelected,
+                postView: true
+            };
+        });
 
-        const postSelected = this.state.posts.find(
-            post => post.id === parseInt(number)
-        );
         const postAuthorURL = `https://jsonplaceholder.typicode.com/users/${
             postSelected.userId
         }`;
@@ -70,24 +70,21 @@ class App extends Component {
         fetch(postAuthorURL)
             .then(res => res.json())
             .then(user => {
-                this.setState({
-                    showingUser: user,
-                    showingPost: postSelected,
-                    postView: true,
-                    error: false
+                this.setState(() => {
+                    return { showingUser: user };
                 });
             });
     };
 
     handleOpenUserView = () => {
-        this.setState({
-            postView: false
+        this.setState(() => {
+            return { postView: false };
         });
     };
 
     handleCloseUserView = () => {
-        this.setState({
-            postView: true
+        this.setState(() => {
+            return { postView: true };
         });
     };
 
@@ -115,7 +112,7 @@ class App extends Component {
                         />
                         <FooterForm
                             numberEntered={this.handleNumberEntered}
-                            error={this.state.error}
+                            showingPostId={this.state.showingPost.id}
                         />
                     </div>
                 )}

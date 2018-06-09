@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import cuid from 'cuid';
 import Timeline from '../Timeline/Timeline';
-import Share from '../Share/Share';
 import Header from '../Header/Header';
 
 const resetInput = {
@@ -42,16 +41,19 @@ class App extends Component {
 
     handleInputChange = e => {
         const shareInput = Object.assign({}, this.state.formInput);
-        shareInput[e.target.name] = e.target.value;
+        // shareInput[e.target.name] = e.target.value;
+        shareInput.body = e.target.value;
+        // console.log(shareInput);
         this.setState({
             formInput: shareInput
         });
     };
 
     handleFormSubmit = e => {
+        const newState = { ...this.state };
         if (this.state.isEditing === false) {
             e.preventDefault();
-            const newState = Object.assign({}, this.state);
+            setTimeout(this.handleClearStatus, 4000);
             newState.formInput.id = cuid();
             newState.formInput.createdAt = new Date().getTime();
             const newShare = newState.formInput;
@@ -62,24 +64,28 @@ class App extends Component {
                 .sort((a, b) => a.createdAt - b.createdAt)
                 .reverse();
             newState.shares = sortedShares;
-            this.setState({
-                shares: sortedShares,
-                formInput: resetInput,
-                status: 'shareCreated'
+            this.setState(() => {
+                return {
+                    shares: sortedShares,
+                    formInput: resetInput,
+                    status: 'shareCreated'
+                };
             });
         } else {
             e.preventDefault();
-            const newState = Object.assign({}, this.state);
+            setTimeout(this.handleClearStatus, 4000);
             const shareToUpdate = this.state.shares.find(
                 share => share.id === this.state.formInput.id
             );
             const index = newState.shares.indexOf(shareToUpdate);
             newState.shares[index].body = newState.formInput.body;
-            this.setState({
-                isEditing: false,
-                shares: newState.shares,
-                formInput: resetInput,
-                status: 'shareUpdated'
+            this.setState(() => {
+                return {
+                    isEditing: false,
+                    shares: newState.shares,
+                    formInput: resetInput,
+                    status: 'shareUpdated'
+                };
             });
         }
     };
@@ -98,24 +104,37 @@ class App extends Component {
         });
     };
 
-    handleFormEditCancel = e => {
+    handleCancelEditForm = e => {
         e.preventDefault();
 
-        this.setState({
-            isEditing: false,
-            formInput: resetInput
+        this.setState(() => {
+            return {
+                isEditing: false,
+                formInput: resetInput
+            };
         });
     };
 
     handleDeleteShare = shareId => () => {
+        setTimeout(this.handleClearStatus, 4000);
         const newState = Object.assign({}, this.state);
         const updatedShares = newState.shares.filter(
             share => share.id !== shareId
         );
-        this.setState({
-            shares: updatedShares,
-            isEditing: false,
-            status: 'shareDeleted'
+        this.setState(() => {
+            return {
+                shares: updatedShares,
+                isEditing: false,
+                status: 'shareDeleted'
+            };
+        });
+    };
+
+    handleClearStatus = () => {
+        this.setState(() => {
+            return {
+                status: null
+            };
         });
     };
 
@@ -132,7 +151,7 @@ class App extends Component {
                     Update
                 </button>
                 <button
-                    onClick={this.handleFormEditCancel}
+                    onClick={this.handleCancelEditForm}
                     className="btn btn-warning btn-block"
                 >
                     Cancel
@@ -154,6 +173,7 @@ class App extends Component {
                                     <Header
                                         shares={this.state.shares}
                                         status={this.state.status}
+                                        // clearStatus={this.handleClearStatus}
                                     />
                                 )}
 
