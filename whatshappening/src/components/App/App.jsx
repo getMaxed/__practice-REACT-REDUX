@@ -51,7 +51,22 @@ class App extends Component {
 
     handleFormSubmit = e => {
         const newState = { ...this.state };
-        if (this.state.isEditing === false) {
+
+        if (
+            this.state.formInput.body === '' &&
+            this.state.shares.length === 0
+        ) {
+            e.preventDefault();
+            this.placeholder = 'Write something';
+        }
+        if (this.state.formInput.body === '' && this.state.shares.length > 0) {
+            e.preventDefault();
+            this.textareaRef.current.focus();
+            setTimeout(this.handleClearStatus, 4000);
+            this.setState(() => {
+                return { status: 'writeSomething' };
+            });
+        } else if (this.state.isEditing === false) {
             e.preventDefault();
             setTimeout(this.handleClearStatus, 4000);
             newState.formInput.id = cuid();
@@ -116,7 +131,7 @@ class App extends Component {
     };
 
     handleDeleteShare = shareId => () => {
-        setTimeout(this.handleClearStatus, 4000);
+        setTimeout(this.handleClearStatus, 3000);
         const newState = Object.assign({}, this.state);
         const updatedShares = newState.shares.filter(
             share => share.id !== shareId
@@ -137,6 +152,14 @@ class App extends Component {
             };
         });
     };
+
+    handleEmptyShare = () => {
+        if (this.state.isEditing) {
+            return;
+        }
+    };
+
+    placeholder = '';
 
     /*
     |--------------------------------------------------------------------------
@@ -169,12 +192,15 @@ class App extends Component {
                     <div className="col-sm-10 offset-sm-1">
                         <div className="app">
                             <form onSubmit={this.handleFormSubmit}>
-                                {this.state.shares.length !== 0 && (
+                                {this.state.shares.length ? (
                                     <Header
                                         shares={this.state.shares}
                                         status={this.state.status}
+                                        shareText={this.state.formInput.body}
                                         // clearStatus={this.handleClearStatus}
                                     />
+                                ) : (
+                                    this.handleEmptyBodyWithNoShares
                                 )}
 
                                 {this.state.isEditing === false ? (
@@ -189,6 +215,11 @@ class App extends Component {
 
                                 <div className="form-group">
                                     <textarea
+                                        placeholder={
+                                            !this.state.shares.length
+                                                ? this.placeholder
+                                                : ''
+                                        }
                                         ref={this.textareaRef}
                                         rows="5"
                                         name="body"

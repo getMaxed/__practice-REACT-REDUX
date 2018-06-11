@@ -17,6 +17,24 @@ class App extends Component {
         postView: true
     };
 
+    async getData() {
+        // get posts
+        const getPostsResponse = await fetch(
+            'https://jsonplaceholder.typicode.com/posts'
+        );
+        const posts = await getPostsResponse.json();
+        // get showingPost
+        const showingPost = posts[Math.floor(Math.random() * posts.length)];
+
+        //get user
+        const getUserResponse = await fetch(
+            `https://jsonplaceholder.typicode.com/users/${showingPost.userId}`
+        );
+        const showingUser = await getUserResponse.json();
+        // return/setState
+        return this.setState({ posts, showingPost, showingUser });
+    }
+
     /*
     |--------------------------------------------------------------------------
     | LIFECYCLE, INITIAL API CALL
@@ -24,29 +42,34 @@ class App extends Component {
     */
 
     componentDidMount() {
-        const postsURL = 'https://jsonplaceholder.typicode.com/posts';
-        fetch(postsURL)
-            .then(res => res.json())
-            .then(posts => {
-                const randomNumber = Math.floor(Math.random() * 100);
-                const randomPost = posts.find(post => post.id === randomNumber);
-                fetch(
-                    `https://jsonplaceholder.typicode.com/users/${
-                        randomPost.userId
-                    }`
-                ).then(res => {
-                    res.json().then(user => {
-                        this.setState(() => {
-                            return {
-                                posts: posts,
-                                showingPost: randomPost,
-                                showingUser: user
-                            };
-                        });
-                    });
-                });
-            });
+        this.getData();
     }
+
+    // componentDidMount() {
+    //     const postsURL = 'https://jsonplaceholder.typicode.com/posts';
+    //     fetch(postsURL)
+    //         .then(res => res.json())
+    //         .then(posts => {
+    //             const randomPost =
+    //                 posts[Math.floor(Math.random() * posts.length)];
+    //             fetch(
+    //                 `https://jsonplaceholder.typicode.com/users/${
+    //                     randomPost.userId
+    //                 }`
+    //             ).then(res => {
+    //                 res.json().then(user => {
+    //                     this.setState(() => {
+    //                         return {
+    //                             posts: posts,
+    //                             showingPost: randomPost,
+    //                             showingUser: user
+    //                         };
+    //                     });
+    //                 });
+    //             });
+    //         })
+    //         .catch(err => console.log(err));
+    // }
 
     /*
     |--------------------------------------------------------------------------

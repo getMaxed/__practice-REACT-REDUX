@@ -2,11 +2,11 @@ import React from 'react';
 
 const MainBody = props => {
     return (
-        <div>
+        <React.Fragment>
             {props.postView ? (
                 <p>{props.body}</p>
             ) : (
-                <div>
+                <React.Fragment>
                     <ul>
                         <li>Name: {props.body.name}</li>
                         <li>Phone: {props.body.phone}</li>
@@ -17,9 +17,9 @@ const MainBody = props => {
                     <button onClick={props.closeUserView} className="back">
                         Back to post
                     </button>
-                </div>
+                </React.Fragment>
             )}
-        </div>
+        </React.Fragment>
     );
 };
 

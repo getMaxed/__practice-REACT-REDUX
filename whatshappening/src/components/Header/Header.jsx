@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 const Header = props => {
     const status = () => {
         switch (props.status) {
+            case 'writeSomething':
+                return <span className="text-primary">Write something</span>;
             case 'shareCreated':
                 return (
                     <span className="text-success">Share has been created</span>

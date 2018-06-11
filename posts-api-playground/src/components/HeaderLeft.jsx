@@ -2,9 +2,9 @@ import React from 'react';
 
 const HeaderLeft = props => {
     return (
-        <div>
+        <React.Fragment>
             <h4 className="left">Post number : {props.postNumber}</h4>
-        </div>
+        </React.Fragment>
     );
 };
 
